@@ -38,7 +38,7 @@ const Register = () => {
     try {
       setIsLoading(true);
       const res = await axios.post(
-        "http://localhost:5000/auth/register",
+        `${import.meta.env.VITE_API_URL}/auth/register`,
         userRegData
       );
       setIsLoading(false);

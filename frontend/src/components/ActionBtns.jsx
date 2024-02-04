@@ -14,7 +14,7 @@ const ActionBtns = ({ recipeId }) => {
   const { mutateAsync: deleteRecipe, isLoading } = useMutation({
     mutationFn: async (id) => {
       const { data } = await axios.delete(
-        `http://localhost:5000/recipe/${id}`,
+        `${import.meta.env.VITE_API_URL}/recipe/${id}`,
         {
           withCredentials: true,
         }

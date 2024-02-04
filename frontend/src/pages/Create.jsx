@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { Button } from "../components/Button";
+import { Link } from "react-router-dom";
+import { GoChevronLeft } from "react-icons/go";
 
 const AddRecipe = () => {
   const [recipeData, setRecipeData] = useState({
@@ -37,7 +39,7 @@ const AddRecipe = () => {
   const { mutate: createPost, isLoading } = useMutation({
     mutationFn: async (recipeData) => {
       const { data } = await axios.post(
-        "http://localhost:5000/recipe",
+        `${import.meta.env.VITE_API_URL}/recipe`,
         recipeData,
         {
           withCredentials: true,
@@ -79,9 +81,18 @@ const AddRecipe = () => {
   return (
     <section>
       <div className="container max-w-6xl mx-auto min-h-[calc(100vh-80px)] p-2 py-8 md:py-16">
-        <h1 className="text-4xl text-center md:text-6xl font-semibold mb-8">
-          Add a Recipe
-        </h1>
+        <div className="flex items-center justify-between mx-auto mb-6 md:mb-12 max-w-lg">
+          <h1 className="text-4xl text-center md:text-6xl font-semibold">
+            Add Recipe
+          </h1>
+          <Link
+            to="/"
+            className="p-[6px] px-3 bg-zinc-100 hover:bg-zinc-200 rounded-sm flex items-center justify-center gap-x-[2px]"
+          >
+            <GoChevronLeft size={15} className="mt-[2px]" />
+            Home
+          </Link>
+        </div>
         <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
           <div className="mb-4">
             <label htmlFor="name" className="block mb-1">

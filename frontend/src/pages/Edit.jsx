@@ -4,6 +4,8 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "../components/Button";
+import { Link } from "react-router-dom";
+import { GoChevronLeft } from "react-icons/go";
 
 const EditRecipe = () => {
   const { id } = useParams();
@@ -20,9 +22,12 @@ const EditRecipe = () => {
   const { data: recipe, isLoading: fetchLoading } = useQuery({
     queryKey: ["editrecipe", id],
     queryFn: async () => {
-      const { data } = await axios.get(`http://localhost:5000/recipe/${id}`, {
-        withCredentials: true,
-      });
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/recipe/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
       setRecipeData(data);
     },
     cacheTime: 0,
@@ -49,7 +54,7 @@ const EditRecipe = () => {
   const { mutate: updateRecipe, isLoading } = useMutation({
     mutationFn: async () => {
       const { data } = await axios.put(
-        `http://localhost:5000/recipe/${id}`,
+        `${import.meta.env.VITE_API_URL}/recipe/${id}`,
         recipeData,
         {
           withCredentials: true,
@@ -98,9 +103,18 @@ const EditRecipe = () => {
   return (
     <section>
       <div className="container max-w-6xl mx-auto min-h-[calc(100vh-80px)] p-2 py-8 md:py-16">
-        <h1 className="text-4xl text-center md:text-6xl font-semibold mb-8">
-          Edit Recipe
-        </h1>
+        <div className="flex items-center justify-between mx-auto mb-6 md:mb-12 max-w-lg">
+          <h1 className="text-4xl text-center md:text-6xl font-semibold">
+            Edit Recipe
+          </h1>
+          <Link
+            to="/"
+            className="p-[6px] px-3 bg-zinc-100 hover:bg-zinc-200 rounded-sm flex items-center justify-center gap-x-[2px]"
+          >
+            <GoChevronLeft size={15} className="mt-[2px]" />
+            Home
+          </Link>
+        </div>
         <form onSubmit={handleSubmit} className="max-w-lg mx-auto">
           <div className="mb-4">
             <label htmlFor="name" className="block mb-1">

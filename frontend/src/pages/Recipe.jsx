@@ -17,9 +17,12 @@ const RecipeDetail = () => {
   } = useQuery({
     queryKey: ["singlerecipe", id],
     queryFn: async () => {
-      const { data } = await axios.get(`http://localhost:5000/recipe/${id}`, {
-        withCredentials: true,
-      });
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/recipe/${id}`,
+        {
+          withCredentials: true,
+        }
+      );
       return data;
     },
   });
