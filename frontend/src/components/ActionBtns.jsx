@@ -26,7 +26,7 @@ const ActionBtns = ({ recipeId }) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries("recipes"); // Invalidate and refetch the "recipes" query
-      toast.success("Recipe updated successfully!");
+      toast.success("Recipe deleted successfully!");
     },
   });
 

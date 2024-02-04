@@ -3,6 +3,18 @@ import { Link } from "react-router-dom";
 import ActionBtns from "./ActionBtns";
 
 const Table = ({ recipes }) => {
+  const truncateDescription = (text, numOfWords) => {
+    const words = text.split(" ");
+
+    if (words.length < numOfWords) {
+      return text;
+    }
+    const truncatedArray = words.slice(0, numOfWords);
+
+    const finaltext = truncatedArray.join(" ");
+    return finaltext + "...";
+  };
+
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full divide-y divide-gray-200">
@@ -39,7 +51,8 @@ const Table = ({ recipes }) => {
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm text-gray-500">
-                  {recipe.description}
+                  {truncateDescription(recipe.description, 5)}
+                  <span className="font-bold">more</span>
                 </div>
               </td>
               <td className="px-6 py-2 whitespace-nowrap text-sm flex font-medium">
