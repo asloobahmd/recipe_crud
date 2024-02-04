@@ -4,8 +4,10 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { loginPayload } from "../utils/validationSchema";
 import toast from "react-hot-toast";
+import { Button } from "../components/Button";
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [checked, setChecked] = useState(false);
 
   const { login, currentUser } = useContext(AuthContext);
@@ -29,9 +31,12 @@ const Login = () => {
 
   const userlogin = async (formData) => {
     try {
+      setIsLoading(true);
       await login(formData);
+      setIsLoading(false);
       navigate("/");
     } catch (error) {
+      setIsLoading(false);
       toast.error(error.response.data);
     }
   };
@@ -90,12 +95,14 @@ const Login = () => {
               {checked ? <FaEye /> : <FaRegEyeSlash />}
             </button>
           </div>
-          <button
+          <Button
+            isLoading={isLoading}
+            disabled={isLoading}
             type="submit"
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
           >
             Login
-          </button>
+          </Button>
         </form>
         <div className="flex justify-center gap-x-2">
           <p className="text-center ">Don't have an account?</p>

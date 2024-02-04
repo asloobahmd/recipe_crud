@@ -1,16 +1,21 @@
 import axios from "axios";
 import React from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { Link, useParams } from "react-router-dom";
+import { GoChevronLeft } from "react-icons/go";
+import { useEffect } from "react";
 
 const RecipeDetail = () => {
   const { id } = useParams();
+
+  const queryClient = useQueryClient();
+
   const {
     data: recipe,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["singlerecipe"],
+    queryKey: ["singlerecipe", id],
     queryFn: async () => {
       const { data } = await axios.get(`http://localhost:5000/recipe/${id}`, {
         withCredentials: true,
@@ -48,9 +53,10 @@ const RecipeDetail = () => {
           </h1>
           <Link
             to="/"
-            className="p-[6px] px-3 bg-teal-700 hover:bg-teal-600 text-white rounded-sm mr-4"
+            className="p-[6px] px-3 bg-zinc-100 hover:bg-zinc-200 rounded-sm flex items-center justify-center gap-x-[2px]"
           >
-            Back to Home
+            <GoChevronLeft size={15} className="mt-[2px]" />
+            Home
           </Link>
         </div>
         <div className="bg-white border rounded-md shadow-lg p-6">

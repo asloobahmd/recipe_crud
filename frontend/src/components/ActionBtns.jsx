@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { Button } from "../components/Button";
 
 const ActionBtns = ({ recipeId }) => {
   const navigate = useNavigate();
@@ -59,19 +60,20 @@ const ActionBtns = ({ recipeId }) => {
 
   return (
     <>
-      <button
+      <Button
         onClick={() => handleEditBtn(recipeId)}
         className="text-white rounded-sm bg-teal-700 hover:bg-teal-600 p-1 px-3 mr-2"
       >
         Edit
-      </button>
-      <button
+      </Button>
+      <Button
         onClick={() => handleDeleteBtn(recipeId)}
         className="text-white rounded-sm bg-orange-700 hover:bg-orange-600 p-1 px-3"
         disabled={isLoading}
+        isLoading={isLoading}
       >
-        {isLoading ? "Deleting..." : "Delete"}
-      </button>
+        {isLoading ? "Deleting" : "Delete"}
+      </Button>
     </>
   );
 };

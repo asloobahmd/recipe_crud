@@ -5,8 +5,11 @@ import { userRegisterPayload } from "../utils/validationSchema";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/AuthContext";
+import { Button } from "../components/Button";
 
 const Register = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -33,12 +36,15 @@ const Register = () => {
 
   const registerUser = async (userRegData) => {
     try {
+      setIsLoading(true);
       const res = await axios.post(
         "http://localhost:5000/auth/register",
         userRegData
       );
+      setIsLoading(false);
       navigate("/login");
     } catch (error) {
+      setIsLoading(false);
       toast.error(error.response.data);
     }
   };
@@ -126,12 +132,14 @@ const Register = () => {
               {showConfirmPassword ? <FaEye /> : <FaRegEyeSlash />}
             </button>
           </div>
-          <button
+          <Button
+            isLoading={isLoading}
+            disabled={isLoading}
             type="submit"
             className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
           >
             Register
-          </button>
+          </Button>
         </form>
         <div className="flex justify-center gap-x-2">
           <p className="text-center ">Already have an account?</p>

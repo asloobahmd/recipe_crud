@@ -42,7 +42,7 @@ const Table = ({ recipes }) => {
                   {recipe.description}
                 </div>
               </td>
-              <td className="px-6 py-2 whitespace-nowrap text-sm font-medium">
+              <td className="px-6 py-2 whitespace-nowrap text-sm flex font-medium">
                 <ActionBtns recipeId={recipe._id} />
               </td>
             </tr>

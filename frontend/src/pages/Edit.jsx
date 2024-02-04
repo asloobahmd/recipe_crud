@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import toast from "react-hot-toast";
 import { useParams, useNavigate } from "react-router-dom";
+import { Button } from "../components/Button";
 
 const EditRecipe = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const queryClient = useQueryClient();
 
   const [recipeData, setRecipeData] = useState({
     name: "",
@@ -15,13 +18,14 @@ const EditRecipe = () => {
   });
 
   const { data: recipe, isLoading: fetchLoading } = useQuery({
-    queryKey: ["singlerecipe"],
+    queryKey: ["editrecipe", id],
     queryFn: async () => {
       const { data } = await axios.get(`http://localhost:5000/recipe/${id}`, {
         withCredentials: true,
       });
       setRecipeData(data);
     },
+    cacheTime: 0,
   });
 
   const handleChange = (e) => {
@@ -56,7 +60,8 @@ const EditRecipe = () => {
     onError: (error) => {
       toast.error(error.response.data);
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      queryClient.invalidateQueries(["recipes"]);
       toast.success("Recipe updated successfully!");
       navigate("/");
     },
@@ -138,13 +143,14 @@ const EditRecipe = () => {
               required
             ></textarea>
           </div>
-          <button
+          <Button
             type="submit"
-            className="bg-teal-700 hover:bg-teal-600 text-white px-4 py-2 rounded-md"
+            className="bg-teal-700 hover:bg-teal-600 text-white px-4 py-2 rounded-md w-full"
+            isLoading={isLoading}
             disabled={isLoading}
           >
             Update Recipe
-          </button>
+          </Button>
         </form>
       </div>
     </section>

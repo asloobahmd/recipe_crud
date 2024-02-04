@@ -1,13 +1,7 @@
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider,
-} from "react-query";
 import axios from "axios";
-import Table from "../components/Table";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import Table from "../components/Table";
 
 const Home = () => {
   const { data: recipes, isLoading } = useQuery({
@@ -27,9 +21,10 @@ const Home = () => {
           <h1 className="text-4xl text-center md:text-left md:text-6xl font-semibold  ">
             Recipes
           </h1>
+
           <Link
             to="/create"
-            className="p-[6px] px-3 bg-teal-700 hover:bg-teal-600 text-white rounded-sm mr-4"
+            className="p-[6px] px-3 bg-zinc-100 hover:bg-zinc-200 rounded-sm gap-x-[2px]"
           >
             Add a recipe
           </Link>

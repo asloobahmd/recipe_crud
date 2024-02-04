@@ -1,8 +1,9 @@
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../components/Button";
 
 const AddRecipe = () => {
   const [recipeData, setRecipeData] = useState({
@@ -10,6 +11,8 @@ const AddRecipe = () => {
     ingredients: [],
     description: "",
   });
+
+  const queryClient = useQueryClient();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,6 +49,7 @@ const AddRecipe = () => {
       toast.success(error.response.data);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries(["recipes"]);
       toast.success("Recipe added successfully!");
       recipeData.name = "";
       recipeData.ingredients = [];
@@ -53,8 +57,6 @@ const AddRecipe = () => {
       navigate("/");
     },
   });
-
-  //
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -122,13 +124,14 @@ const AddRecipe = () => {
               required
             ></textarea>
           </div>
-          <button
-            type="submit"
-            className="bg-teal-700 hover:bg-teal-600 text-white px-4 py-2 rounded-md"
+          <Button
+            isLoading={isLoading}
             disabled={isLoading}
+            type="submit"
+            className="bg-teal-700 hover:bg-teal-600 text-white px-4 py-2 rounded-md w-full"
           >
             Add Recipe
-          </button>
+          </Button>
         </form>
       </div>
     </section>

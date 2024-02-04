@@ -1,18 +1,23 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import { AuthContext } from "../context/AuthContext";
+import { Button } from "./Button";
 
 const links = [{ title: "Home", link: "/" }];
 
 const Navmodel = ({ setmodel }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { currentUser, logout } = useContext(AuthContext);
 
   const handleLogout = async () => {
     try {
+      setIsLoading(true);
       await logout();
+      setIsLoading(false);
       navigate("/login");
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
     }
   };
@@ -59,12 +64,14 @@ const Navmodel = ({ setmodel }) => {
               Refresh page
             </button>
             {currentUser && (
-              <button
+              <Button
+                isLoading={isLoading}
+                disabled={isLoading}
                 onClick={handleLogout}
                 className="py-2 w-full bg-slate-700 hover:bg-slate-600 text-white rounded-md"
               >
                 Logout
-              </button>
+              </Button>
             )}
             {currentUser ? (
               <li className="py-2 font-medium list-none">
