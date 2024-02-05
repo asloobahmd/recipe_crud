@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import { AuthContext } from "../context/AuthContext";
@@ -9,6 +9,21 @@ const links = [{ title: "Home", link: "/" }];
 const Navmodel = ({ setmodel }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { currentUser, logout } = useContext(AuthContext);
+
+  const addBodyClass = () => {
+    document.body.classList.add("modal-open");
+  };
+
+  const removeBodyClass = () => {
+    document.body.classList.remove("modal-open");
+  };
+
+  useEffect(() => {
+    addBodyClass();
+    return () => {
+      removeBodyClass();
+    };
+  }, []);
 
   const handleLogout = async () => {
     try {
