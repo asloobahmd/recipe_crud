@@ -3,7 +3,7 @@ import React from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import { GoChevronLeft } from "react-icons/go";
-import { useEffect } from "react";
+import parse from "html-react-parser";
 
 const RecipeDetail = () => {
   const { id } = useParams();
@@ -69,9 +69,10 @@ const RecipeDetail = () => {
               <li key={index}>{ingredient}</li>
             ))}
           </ul>
-          <div className="mt-6">
-            <h2 className="text-xl font-semibold mb-4">Description</h2>
-            <p>{recipe?.description}</p>
+          <div className="mt-6 ql-editor">
+            <h2 className="text-xl font-semibold mb-4">Description 📖</h2>{" "}
+            <br />
+            {parse(recipe?.description)}
           </div>
         </div>
       </div>

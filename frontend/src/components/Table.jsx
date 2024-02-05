@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import ActionBtns from "./ActionBtns";
+import parse from "html-react-parser";
 
 const Table = ({ recipes }) => {
   const truncateDescription = (text, numOfWords) => {
@@ -50,9 +51,8 @@ const Table = ({ recipes }) => {
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-500">
-                  {truncateDescription(recipe.description, 5)}
-                  <span className="font-bold">more</span>
+                <div className="text-sm text-gray-500 ">
+                  {parse(truncateDescription(recipe?.description, 5))}
                 </div>
               </td>
               <td className="px-6 py-2 whitespace-nowrap text-sm flex font-medium">

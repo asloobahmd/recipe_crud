@@ -1,17 +1,19 @@
 import axios from "axios";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useMutation, useQueryClient } from "react-query";
-import { useNavigate } from "react-router-dom";
-import { Button } from "../components/Button";
-import { Link } from "react-router-dom";
 import { GoChevronLeft } from "react-icons/go";
+import { useMutation, useQueryClient } from "react-query";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+
+import { Link, useNavigate } from "react-router-dom";
+import { Button } from "../components/Button";
 
 const AddRecipe = () => {
+  const [desc, setDesc] = useState("");
   const [recipeData, setRecipeData] = useState({
     name: "",
     ingredients: [],
-    description: "",
   });
 
   const queryClient = useQueryClient();
@@ -37,10 +39,10 @@ const AddRecipe = () => {
   const navigate = useNavigate();
 
   const { mutate: createPost, isLoading } = useMutation({
-    mutationFn: async (recipeData) => {
+    mutationFn: async (recipePayload) => {
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/recipe`,
-        recipeData,
+        recipePayload,
         {
           withCredentials: true,
         }
@@ -55,7 +57,7 @@ const AddRecipe = () => {
       toast.success("Recipe added successfully!");
       recipeData.name = "";
       recipeData.ingredients = [];
-      recipeData.description = "";
+      setDesc("");
       navigate("/");
     },
   });
@@ -68,11 +70,18 @@ const AddRecipe = () => {
         !recipeData ||
         !recipeData.name ||
         recipeData.ingredients.length === 0 ||
-        !recipeData.description
+        !desc
       ) {
         return toast.error("Please enter all input fields");
       }
-      createPost(recipeData);
+
+      const recipePayload = {
+        name: recipeData.name,
+        ingredients: recipeData.ingredients,
+        description: desc,
+      };
+
+      createPost(recipePayload);
     } catch (error) {
       console.error("Error adding recipe:", error);
     }
@@ -80,7 +89,7 @@ const AddRecipe = () => {
 
   return (
     <section>
-      <div className="container max-w-6xl mx-auto min-h-[calc(100vh-80px)] p-2 py-8 md:py-16">
+      <div className="container max-w-6xl mx-auto min-h-[calc(100vh-80px)] p-2 py-8">
         <div className="flex items-center justify-between mx-auto mb-6 md:mb-12 max-w-lg">
           <h1 className="text-4xl text-center md:text-6xl font-semibold">
             Add Recipe
@@ -122,18 +131,18 @@ const AddRecipe = () => {
               placeholder="Eg:- suger,vanilla,egg"
             ></textarea>
           </div>
-          <div className="mb-4">
+          <div className="mb-[80px]">
             <label htmlFor="description" className="block mb-1">
               Description
             </label>
-            <textarea
-              id="description"
-              name="description"
-              value={recipeData.description}
-              onChange={handleChange}
-              className="w-full border resize-none border-gray-300 rounded-md p-2 h-[100px]"
-              required
-            ></textarea>
+            <div className="h-[100px]">
+              <ReactQuill
+                theme="snow"
+                value={desc}
+                onChange={(value) => setDesc(value)}
+                className="h-[100%] "
+              />
+            </div>
           </div>
           <Button
             isLoading={isLoading}

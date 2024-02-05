@@ -6,18 +6,21 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "../components/Button";
 import { Link } from "react-router-dom";
 import { GoChevronLeft } from "react-icons/go";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
+import parse from "html-react-parser";
 
 const EditRecipe = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
 
-  const queryClient = useQueryClient();
-
+  const [desc, setDesc] = useState("");
   const [recipeData, setRecipeData] = useState({
     name: "",
     ingredients: [],
-    description: "",
   });
+
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const { data: recipe, isLoading: fetchLoading } = useQuery({
     queryKey: ["editrecipe", id],
@@ -29,6 +32,7 @@ const EditRecipe = () => {
         }
       );
       setRecipeData(data);
+      setDesc(data.description);
     },
     cacheTime: 0,
   });
@@ -52,10 +56,10 @@ const EditRecipe = () => {
   };
 
   const { mutate: updateRecipe, isLoading } = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (recipeEditPayload) => {
       const { data } = await axios.put(
         `${import.meta.env.VITE_API_URL}/recipe/${id}`,
-        recipeData,
+        recipeEditPayload,
         {
           withCredentials: true,
         }
@@ -80,11 +84,25 @@ const EditRecipe = () => {
         !recipeData ||
         !recipeData.name ||
         recipeData.ingredients.length === 0 ||
-        !recipeData.description
+        !desc ||
+        desc === "<p><br></p>"
       ) {
         return toast.error("Please enter all input fields");
       }
-      updateRecipe();
+
+      // return console.log({
+      //   name: recipeData.name,
+      //   ingredients: recipeData.ingredients,
+      //   description: desc,
+      // });
+
+      const recipeEditPayload = {
+        name: recipeData.name,
+        ingredients: recipeData.ingredients,
+        description: desc,
+      };
+
+      updateRecipe(recipeEditPayload);
     } catch (error) {
       console.error(error);
     }
@@ -144,18 +162,18 @@ const EditRecipe = () => {
               placeholder="Eg:- suger,vanilla,egg"
             ></textarea>
           </div>
-          <div className="mb-4">
+          <div className="mb-[80px]">
             <label htmlFor="description" className="block mb-1">
               Description
             </label>
-            <textarea
-              id="description"
-              name="description"
-              value={recipeData.description}
-              onChange={handleChange}
-              className="w-full border resize-none border-gray-300 rounded-md p-2 h-[100px]"
-              required
-            ></textarea>
+            <div className="h-[100px]">
+              <ReactQuill
+                theme="snow"
+                value={desc}
+                onChange={(value) => setDesc(value)}
+                className="h-[100%] "
+              />
+            </div>
           </div>
           <Button
             type="submit"
