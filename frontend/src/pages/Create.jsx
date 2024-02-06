@@ -21,9 +21,7 @@ const AddRecipe = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "ingredients") {
-      const ingredientsArray = value
-        .split(",")
-        .map((ingredient) => ingredient.trim());
+      const ingredientsArray = value.split(",");
       setRecipeData((prev) => ({
         ...prev,
         ingredients: ingredientsArray,
@@ -62,6 +60,11 @@ const AddRecipe = () => {
     },
   });
 
+  const setNewIngrediants = (ingredients) => {
+    const newVal = ingredients.map((item) => item.trim());
+    return newVal;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -75,9 +78,11 @@ const AddRecipe = () => {
         return toast.error("Please enter all input fields");
       }
 
+      const newIngrediants = setNewIngrediants(recipeData.ingredients);
+
       const recipePayload = {
         name: recipeData.name,
-        ingredients: recipeData.ingredients,
+        ingredients: newIngrediants,
         description: desc,
       };
 
@@ -128,7 +133,7 @@ const AddRecipe = () => {
               onChange={handleChange}
               className="w-full border resize-none border-gray-300 rounded-md p-2 h-[100px]"
               required
-              placeholder="Eg:- suger,vanilla,egg"
+              placeholder="Eg:- suger, milk 1L, egg 3"
             ></textarea>
           </div>
           <div className="mb-[80px]">

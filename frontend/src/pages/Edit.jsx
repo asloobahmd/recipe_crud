@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useParams, useNavigate } from "react-router-dom";
-import { Button } from "../components/Button";
-import { Link } from "react-router-dom";
 import { GoChevronLeft } from "react-icons/go";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import parse from "html-react-parser";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Button } from "../components/Button";
 
 const EditRecipe = () => {
   const { id } = useParams();
@@ -31,7 +29,14 @@ const EditRecipe = () => {
           withCredentials: true,
         }
       );
-      setRecipeData(data);
+      setRecipeData((prev) => {
+        return {
+          ...prev,
+          name: data?.name,
+          ingredients: data?.ingredients.join(", "),
+        };
+      });
+
       setDesc(data.description);
     },
     cacheTime: 0,
@@ -40,9 +45,7 @@ const EditRecipe = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === "ingredients") {
-      const ingredientsArray = value
-        .split(",")
-        .map((ingredient) => ingredient.trim());
+      const ingredientsArray = value.split(",");
       setRecipeData((prev) => ({
         ...prev,
         ingredients: ingredientsArray,
@@ -76,6 +79,11 @@ const EditRecipe = () => {
     },
   });
 
+  const setNewIngrediants = (ingredients) => {
+    const newVal = ingredients.map((item) => item.trim());
+    return newVal;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -90,15 +98,11 @@ const EditRecipe = () => {
         return toast.error("Please enter all input fields");
       }
 
-      // return console.log({
-      //   name: recipeData.name,
-      //   ingredients: recipeData.ingredients,
-      //   description: desc,
-      // });
+      const newIngrediants = setNewIngrediants(recipeData.ingredients);
 
       const recipeEditPayload = {
         name: recipeData.name,
-        ingredients: recipeData.ingredients,
+        ingredients: newIngrediants,
         description: desc,
       };
 
@@ -155,7 +159,7 @@ const EditRecipe = () => {
             <textarea
               id="ingredients"
               name="ingredients"
-              value={recipeData.ingredients.join(", ")}
+              value={recipeData.ingredients}
               onChange={handleChange}
               className="w-full border resize-none border-gray-300 rounded-md p-2 h-[100px]"
               required
